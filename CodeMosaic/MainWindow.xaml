@@ -64,7 +64,29 @@
 					<Button Name="SettingsButton" 
                             Content="Settings" 
                             Width="150" Height="30"
-                            Command="{Binding SettingsCommand}" />
+                            Command="{Binding SettingsCommand}"
+                            Margin="0,0,0,5" />
+					<!-- New buttons for features -->
+					<Button Content="Cloud Upload" 
+                            Width="150" Height="30"
+                            Command="{Binding CloudUploadCommand}"
+                            Margin="0,0,0,5" ToolTip="Upload to OneDrive/Google Drive" />
+					<Button Content="Version History" 
+                            Width="150" Height="30"
+                            Command="{Binding VersionHistoryCommand}"
+                            Margin="0,0,0,5" ToolTip="Git-like tracking for ops" />
+					<Button Content="Load Plugin" 
+                            Width="150" Height="30"
+                            Command="{Binding PluginLoadCommand}"
+                            Margin="0,0,0,5" ToolTip="Load custom DLL processor" />
+					<Button Content="AI Analysis" 
+                            Width="150" Height="30"
+                            Command="{Binding AIAnalysisCommand}"
+                            Margin="0,0,0,5" ToolTip="OpenAI summarize for metadata" />
+					<Button Content="Collaboration Sync" 
+                            Width="150" Height="30"
+                            Command="{Binding CollaborationSyncCommand}"
+                            Margin="0,0,0,5" ToolTip="Real-time share via SignalR" />
 				</StackPanel>
 			</TabItem>
 
@@ -76,6 +98,11 @@
                             Content="About" 
                             Width="100" Height="30"
                             Command="{Binding AboutCommand}" />
+					<!-- New button for CLI -->
+					<Button Content="Run Batch CLI" 
+                            Width="100" Height="30"
+                            Command="{Binding BatchCLICommand}"
+                            Margin="0,0,0,5" ToolTip="Console mode for automation" />
 				</StackPanel>
 			</TabItem>
 		</TabControl>

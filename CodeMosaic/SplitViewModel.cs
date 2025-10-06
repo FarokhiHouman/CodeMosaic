@@ -233,10 +233,10 @@ public class SplitViewModel : INotifyPropertyChanged {
 							remainder);
 			using FileStream inputStream    = new(inputPath, FileMode.Open, FileAccess.Read);
 			int              partNum        = 1;
-			byte[]           buffer         = new byte[partSize + remainder]; // Adjust for remainder
+			byte[]           buffer         = new byte[partSize + (remainder > 0 ? 1 : 0)]; // Adjust for remainder
 			long             bytesReadTotal = 0;
 			while (bytesReadTotal < fileLength) {
-				long currentPartSize = partSize + (partNum == PartCount ? remainder : 0);
+				long currentPartSize = partSize + (partNum - 1 < remainder ? 1 : 0); // Distribute remainder
 				int  bytesToRead     = (int)Math.Min(currentPartSize, buffer.Length);
 				int  bytesRead       = await inputStream.ReadAsync(buffer, offset: 0, bytesToRead);
 				if (bytesRead == 0)

@@ -4,9 +4,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 
 using Serilog;
+
+using MessageBox = System.Windows.MessageBox;
+
+
 // For WPF MessageBox
 // For TextBlock
-using MessageBox = System.Windows.MessageBox; // For logging
+
+// For logging
 
 namespace CodeMosaic;
 // MainViewModel for MVVM pattern - Handles navigation and commands with minimal logging
@@ -25,6 +30,13 @@ public class MainViewModel : INotifyPropertyChanged {
 	public ICommand ExtractMetadataCommand { get; }
 	public ICommand SettingsCommand        { get; }
 	public ICommand AboutCommand           { get; }
+	// Placeholder Commands for new features
+	public ICommand CloudUploadCommand       { get; }
+	public ICommand VersionHistoryCommand    { get; }
+	public ICommand PluginLoadCommand        { get; }
+	public ICommand AIAnalysisCommand        { get; }
+	public ICommand CollaborationSyncCommand { get; }
+	public ICommand BatchCLICommand          { get; }
 
 	// Logger instance from Serilog - Injected globally
 	private static readonly ILogger Logger = Log.ForContext<MainViewModel>();
@@ -42,6 +54,14 @@ public class MainViewModel : INotifyPropertyChanged {
 		ExtractMetadataCommand = new RelayCommand(ExecuteExtractMetadata);
 		SettingsCommand        = new RelayCommand(ExecuteSettings);
 		AboutCommand           = new RelayCommand(ExecuteAbout);
+
+		// Placeholder Commands for new features
+		CloudUploadCommand       = new RelayCommand(ExecuteCloudUpload);
+		VersionHistoryCommand    = new RelayCommand(ExecuteVersionHistory);
+		PluginLoadCommand        = new RelayCommand(ExecutePluginLoad);
+		AIAnalysisCommand        = new RelayCommand(ExecuteAIAnalysis);
+		CollaborationSyncCommand = new RelayCommand(ExecuteCollaborationSync);
+		BatchCLICommand          = new RelayCommand(ExecuteBatchCLI);
 		Logger.Information("MainViewModel initialized - Ready for navigation.");
 	}
 
@@ -53,7 +73,7 @@ public class MainViewModel : INotifyPropertyChanged {
 
 	private void ExecuteSplit(object parameter) {
 		Logger.Information("Navigating to SplitView.");
-		CurrentView = new SplitView(); // Load SplitView
+		CurrentView = new SplitView();
 	}
 
 	private void ExecuteListFiles(object parameter) {
@@ -63,7 +83,7 @@ public class MainViewModel : INotifyPropertyChanged {
 
 	private void ExecuteCount(object parameter) {
 		Logger.Information("Navigating to CountView.");
-		CurrentView = new TextBlock { Text = "Count Lines Page - Analyze and count lines in selected files." };
+		CurrentView = new CountView(); // Load CountView
 	}
 
 	private void ExecuteExtractMetadata(object parameter) {
@@ -84,8 +104,39 @@ public class MainViewModel : INotifyPropertyChanged {
 						MessageBoxImage.Information);
 	}
 
+	// Placeholder methods for new features (TODO: Implement logic)
+	private void ExecuteCloudUpload(object parameter) {
+		Logger.Information("Cloud Upload executed - TODO: OneDrive/Google integration.");
+		// TODO: Implement cloud upload logic
+	}
+
+	private void ExecuteVersionHistory(object parameter) {
+		Logger.Information("Version History executed - TODO: Git-like tracking.");
+		// TODO: Implement version history
+	}
+
+	private void ExecutePluginLoad(object parameter) {
+		Logger.Information("Plugin Load executed - TODO: DLL loading for custom processors.");
+		// TODO: Implement plugin system
+	}
+
+	private void ExecuteAIAnalysis(object parameter) {
+		Logger.Information("AI Analysis executed - TODO: OpenAI summarize for metadata.");
+		// TODO: Implement AI analysis
+	}
+
+	private void ExecuteCollaborationSync(object parameter) {
+		Logger.Information("Collaboration Sync executed - TODO: SignalR real-time share.");
+		// TODO: Implement collaboration sync
+	}
+
+	private void ExecuteBatchCLI(object parameter) {
+		Logger.Information("Batch CLI executed - TODO: Console mode for automation.");
+		// TODO: Implement CLI mode
+	}
+
 	protected virtual void OnPropertyChanged(string propertyName) =>
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); // Fixed with ? for null safety
 
 	public event PropertyChangedEventHandler PropertyChanged;
 }

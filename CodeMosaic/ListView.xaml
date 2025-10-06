@@ -41,16 +41,22 @@
 			<TextBox Name="OutputFileTextBox" Text="{Binding OutputFileName}" Width="150" Margin="5,0" ToolTip="File Name (JSON)" />
 		</StackPanel>
 
-		<!-- File Extensions Selection - Multi-Select with ListBox -->
+		<!-- File Extensions Selection - Multi-Select with ListBox and Search -->
 		<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,10">
 			<TextBlock Text="Extensions:" Width="100" VerticalAlignment="Center" />
+			<TextBox Name="SearchExtensionsTextBox" Width="80" Margin="5,0" ToolTip="Search extensions" />
 			<ListBox Name="ExtensionsListBox" ItemsSource="{Binding Extensions}" ItemTemplate="{StaticResource ExtensionTemplate}" Width="200" Height="80" Margin="5,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
 			<TextBox Name="NewExtensionTextBox" Text="{Binding NewExtension}" Width="100" Margin="5,0" ToolTip="Add new extension (e.g., .xaml)" />
 			<Button Content="Add" Width="60" Command="{Binding AddExtensionCommand}" />
 		</StackPanel>
 
-		<!-- Start List Button -->
-		<Button Grid.Row="3" Name="StartListButton" Content="Start List Files" Width="150" Height="35" Command="{Binding StartListCommand}" HorizontalAlignment="Right" />
+		<!-- Start List Button and New Feature Buttons -->
+		<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+			<Button Name="StartListButton" Content="Start List Files" Width="120" Height="30" Command="{Binding StartListCommand}" Margin="0,0,5,0" />
+			<Button Content="Export CSV" Width="100" Height="30" Command="{Binding ExportCSVCommand}" ToolTip="Export list to CSV" />
+			<Button Content="Detect Duplicates" Width="120" Height="30" Command="{Binding DetectDuplicatesCommand}" ToolTip="Highlight duplicates in list" />
+			<Button Content="Batch Rename" Width="100" Height="30" Command="{Binding BatchRenameCommand}" ToolTip="Rename selected files with pattern" />
+		</StackPanel>
 
 		<!-- JSON Output Display with Highlighting -->
 		<ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto">

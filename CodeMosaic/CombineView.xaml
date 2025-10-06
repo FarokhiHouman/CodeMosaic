@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:CodeMosaic"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="800">
 	<UserControl.DataContext>
 		<local:CombineViewModel />
 	</UserControl.DataContext>
@@ -25,6 +25,8 @@
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<!-- For Preview Pane -->
 		</Grid.RowDefinitions>
 
 		<!-- Source Folder Path Selection -->
@@ -47,7 +49,7 @@
 			<TextBox Name="OutputFileTextBox" Text="{Binding OutputFileName}" Width="400" Margin="5,0" />
 		</StackPanel>
 
-		<!-- File Extensions Selection - Now Multi-Select with ListBox -->
+		<!-- File Extensions Selection - Multi-Select with ListBox -->
 		<StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,10">
 			<TextBlock Text="Extensions:" Width="100" VerticalAlignment="Center" />
 			<ListBox Name="ExtensionsListBox" ItemsSource="{Binding Extensions}" ItemTemplate="{StaticResource ExtensionTemplate}" Width="200" Height="80" Margin="5,0" ScrollViewer.VerticalScrollBarVisibility="Auto" />
@@ -68,14 +70,24 @@
 		<!-- Include Metadata Checkbox -->
 		<CheckBox Grid.Row="5" Name="IncludeMetadataCheckBox" IsChecked="{Binding IncludeMetadata}" Content="Include Metadata" Margin="0,0,0,10" />
 
-		<!-- Dynamic Max Value Slider (Visible based on Split Mode) -->
+		<!-- Dynamic Max Value Slider -->
 		<StackPanel Grid.Row="6" Name="MaxValueStackPanel" Orientation="Horizontal" Margin="0,0,0,10" Visibility="{Binding MaxVisible}">
 			<TextBlock Name="MaxValueLabel" Text="{Binding MaxLabel}" Width="100" VerticalAlignment="Center" />
 			<Slider Name="MaxValueSlider" Value="{Binding MaxValue}" Width="200" Margin="5,0" />
 			<TextBlock Name="MaxValueLabelText" Width="100" Text="{Binding MaxValue}" VerticalAlignment="Center" Margin="5,0" />
 		</StackPanel>
 
-		<!-- Start Combine Button -->
-		<Button Grid.Row="7" Name="StartCombineButton" Content="Start Combine" Width="150" Height="35" Command="{Binding StartCombineCommand}" HorizontalAlignment="Right" />
+		<!-- Start Combine Button and New Feature Buttons -->
+		<StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right">
+			<Button Name="StartCombineButton" Content="Start Combine" Width="120" Height="35" Command="{Binding StartCombineCommand}" Margin="0,0,5,0" />
+			<Button Content="Export CSV" Width="100" Height="30" Command="{Binding ExportCSVCommand}" ToolTip="Export combined to CSV" />
+			<Button Content="Save Preset" Width="100" Height="30" Command="{Binding SavePresetCommand}" ToolTip="Save config as template" />
+			<Button Content="Load Preset" Width="100" Height="30" Command="{Binding LoadPresetCommand}" ToolTip="Load config template" />
+		</StackPanel>
+
+		<!-- File Preview Pane -->
+		<ScrollViewer Grid.Row="8" VerticalScrollBarVisibility="Auto">
+			<TextBox Name="FilePreviewTextBox" Text="{Binding FilePreviewContent}" IsReadOnly="True" FontFamily="Consolas" FontSize="10" TextWrapping="Wrap" ToolTip="Preview of input file content" />
+		</ScrollViewer>
 	</Grid>
 </UserControl>

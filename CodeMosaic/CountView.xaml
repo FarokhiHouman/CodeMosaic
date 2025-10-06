@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="CodeMosaic.CountView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:CodeMosaic"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="800">
+	<UserControl.DataContext>
+		<local:CountViewModel />
+	</UserControl.DataContext>
+	<Grid Margin="20">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<!-- Input File Path Selection and Progress -->
+		<StackPanel Grid.Row="0" Orientation="Vertical" Margin="0,0,0,10">
+			<StackPanel Orientation="Horizontal">
+				<TextBlock Text="Input File:" Width="100" VerticalAlignment="Center" />
+				<TextBox Name="InputFileTextBox" Text="{Binding InputFilePath}" Width="400" Margin="5,0" IsReadOnly="True" />
+				<Button Content="Browse" Width="80" Command="{Binding BrowseInputFileCommand}" />
+			</StackPanel>
+			<ProgressBar Name="CountProgressBar" Value="{Binding ProgressValue}" Maximum="100" Height="10" Margin="0,5,0,0" IsIndeterminate="{Binding IsCounting}" />
+		</StackPanel>
+
+		<!-- Start Count Button -->
+		<Button Grid.Row="1" Name="StartCountButton" Content="Start Count Lines" Width="150" Height="35" Command="{Binding StartCountCommand}" HorizontalAlignment="Right" />
+
+		<!-- Stats Display with DataGrids -->
+		<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+			<StackPanel>
+				<GroupBox Header="General Stats" Margin="0,0,0,5">
+					<DataGrid Name="GeneralStatsDataGrid" ItemsSource="{Binding GeneralStatsItems}" AutoGenerateColumns="False" IsReadOnly="True" FontFamily="Consolas" FontSize="12" CanUserSortColumns="True">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Metric" Binding="{Binding Metric}" Width="150" SortMemberPath="Metric" />
+							<DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="100" SortMemberPath="Value" />
+							<DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" SortMemberPath="Description" />
+						</DataGrid.Columns>
+					</DataGrid>
+				</GroupBox>
+				<GroupBox Header="File-Specific Stats" Margin="0,0,0,0">
+					<DataGrid Name="SpecificStatsDataGrid" ItemsSource="{Binding SpecificStatsItems}" AutoGenerateColumns="False" IsReadOnly="True" FontFamily="Consolas" FontSize="12" CanUserSortColumns="True">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Metric" Binding="{Binding Metric}" Width="150" SortMemberPath="Metric" />
+							<DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="100" SortMemberPath="Value" />
+							<DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" SortMemberPath="Description" />
+						</DataGrid.Columns>
+					</DataGrid>
+				</GroupBox>
+			</StackPanel>
+		</ScrollViewer>
+
+		<!-- Status Label -->
+		<TextBlock Grid.Row="3" Name="StatusTextBlock" Text="{Binding StatusMessage}" Foreground="Gray" HorizontalAlignment="Center" />
+	</Grid>
+</UserControl>
