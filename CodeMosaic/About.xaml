@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="CodeMosaic.About"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="400"
+             Background="White">
+	<Grid Margin="20">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+			<TextBlock Text="C" FontSize="30" FontWeight="Bold" Margin="0,0,10,0"/>
+			<TextBlock Text="CodeMosaic" FontSize="24" FontWeight="Bold" VerticalAlignment="Center"/>
+		</StackPanel>
+
+		<TextBlock Grid.Row="1" Text="Version 1.0" FontSize="16" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+
+		<StackPanel Grid.Row="2" Margin="0,20,0,0">
+			<TextBlock Text="Developed by: Homan Farokhi" FontSize="14" TextAlignment="Center"/>
+			<TextBlock Text="Date: October 05, 2025" FontSize="12" TextAlignment="Center" Margin="0,5,0,0"/>
+			<Separator Margin="0,15,0,15"/>
+			<TextBlock Text="Features:" FontSize="14" FontWeight="SemiBold"/>
+			<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+				<TextBlock Text="✔" Margin="0,0,5,0"/>
+				<TextBlock Text="Combine, Split, and List Files"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+				<TextBlock Text="✔" Margin="0,0,5,0"/>
+				<TextBlock Text="Count Lines with Detailed Stats"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+				<TextBlock Text="✔" Margin="0,0,5,0"/>
+				<TextBlock Text="MVVM Architecture with WPF"/>
+			</StackPanel>
+			<TextBlock Text="Built with ❤️ using C#." FontSize="12" TextAlignment="Center" Margin="0,15,0,0"/>
+		</StackPanel>
+	</Grid>
+</UserControl>

@@ -56,37 +56,12 @@
 			<TabItem Header="Tools">
 				<StackPanel Orientation="Vertical" Margin="10">
 					<TextBlock Text="Utilities" FontWeight="Bold" Margin="0,0,0,5" />
-					<Button Name="ExtractMetadataButton" 
-                            Content="Extract Metadata" 
-                            Width="150" Height="30"
-                            Command="{Binding ExtractMetadataCommand}"
-                            Margin="0,0,0,5" />
 					<Button Name="SettingsButton" 
                             Content="Settings" 
                             Width="150" Height="30"
                             Command="{Binding SettingsCommand}"
                             Margin="0,0,0,5" />
-					<!-- New buttons for features -->
-					<Button Content="Cloud Upload" 
-                            Width="150" Height="30"
-                            Command="{Binding CloudUploadCommand}"
-                            Margin="0,0,0,5" ToolTip="Upload to OneDrive/Google Drive" />
-					<Button Content="Version History" 
-                            Width="150" Height="30"
-                            Command="{Binding VersionHistoryCommand}"
-                            Margin="0,0,0,5" ToolTip="Git-like tracking for ops" />
-					<Button Content="Load Plugin" 
-                            Width="150" Height="30"
-                            Command="{Binding PluginLoadCommand}"
-                            Margin="0,0,0,5" ToolTip="Load custom DLL processor" />
-					<Button Content="AI Analysis" 
-                            Width="150" Height="30"
-                            Command="{Binding AIAnalysisCommand}"
-                            Margin="0,0,0,5" ToolTip="OpenAI summarize for metadata" />
-					<Button Content="Collaboration Sync" 
-                            Width="150" Height="30"
-                            Command="{Binding CollaborationSyncCommand}"
-                            Margin="0,0,0,5" ToolTip="Real-time share via SignalR" />
+					
 				</StackPanel>
 			</TabItem>
 

@@ -93,7 +93,7 @@ public class CountViewModel : INotifyPropertyChanged {
 	private void ExecuteBrowseInputFile(object parameter) {
 		using OpenFileDialog dialog = new() {
 												Filter =
-													"Text Files (*.txt;*.cs;*.xml;*.json)|*.txt;*.cs;*.xml;*.json|All Files (*.*)|*.*"
+													"Text Files (*.txt;*.cs;*.xml;*.json;*.py;*.xaml;*.sln;*.csproj;*.html;*.css;*.js;*.sql;*.csv;*.java;*.sh)|*.txt;*.cs;*.xml;*.json;*.py;*.xaml;*.sln;*.csproj;*.html;*.css;*.js;*.sql;*.csv;*.java;*.sh|All Files (*.*)|*.*"
 											};
 		if (dialog.ShowDialog() == DialogResult.OK) {
 			InputFilePath = dialog.FileName;
@@ -116,9 +116,25 @@ public class CountViewModel : INotifyPropertyChanged {
 
 		// Check if file is readable (e.g., not a binary/project file like .csproj)
 		string extension = Path.GetExtension(InputFilePath).ToLowerInvariant();
-		if (!new[] { ".txt", ".cs", ".xml", ".json" }.Contains(extension)) {
+		if (!new[] {
+					   ".txt",
+					   ".cs",
+					   ".xml",
+					   ".json",
+					   ".py",
+					   ".xaml",
+					   ".sln",
+					   ".csproj",
+					   ".html",
+					   ".css",
+					   ".js",
+					   ".sql",
+					   ".csv",
+					   ".java",
+					   ".sh"
+				   }.Contains(extension)) {
 			Log.Warning("Validation failed - Unsupported file type for counting: {InputFilePath}", InputFilePath);
-			MessageBox.Show("This file type is not supported for counting (e.g., .csproj). Please select a text-based file.",
+			MessageBox.Show("This file type is not supported for counting. Please select a supported text-based file.",
 							"Unsupported File Type",
 							MessageBoxButton.OK,
 							MessageBoxImage.Warning);
@@ -343,7 +359,210 @@ public class CountViewModel : INotifyPropertyChanged {
 												   "Error parsing XML – fallback to general stats."));
 				}
 				break;
-			// Add more common types (e.g., .log, .html) as needed
+			case ".xaml": // XAML file - Tag count, bindings
+				try {
+					XmlDocument xamlDoc = new();
+					xamlDoc.Load(filePath);
+					int tagCount = xamlDoc.SelectNodes("//*").Count; // Count all elements
+					int bindingCount = xamlDoc.
+									   SelectNodes("//@*[contains(translate(., 'BINDING', 'binding'), 'binding')]").
+									   Count; // Count bindings
+					specificStats.Add(new StatItem("XAML Tags", tagCount.ToString(), "Total XAML elements."));
+					specificStats.Add(new StatItem("Bindings",
+												   bindingCount.ToString(),
+												   "Number of binding expressions."));
+					Log.Information("XAML analysis completed: {TagCount} tags, {BindingCount} bindings in {FilePath}",
+									tagCount,
+									bindingCount,
+									filePath);
+				} catch (Exception ex) {
+					Log.Error("XAML analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("XAML Analysis",
+												   "N/A",
+												   "Error parsing XAML – fallback to general stats."));
+				}
+				break;
+			case ".sln": // Solution file - Project count
+				try {
+					string[] lines        = File.ReadAllLines(filePath);
+					int      projectCount = lines.Count(line => line.Trim().StartsWith("Project("));
+					specificStats.Add(new StatItem("Projects",
+												   projectCount.ToString(),
+												   "Number of projects in the solution."));
+					Log.Information("SLN analysis completed: {ProjectCount} projects in {FilePath}",
+									projectCount,
+									filePath);
+				} catch (Exception ex) {
+					Log.Error("SLN analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("SLN Analysis",
+												   "N/A",
+												   "Error parsing SLN – fallback to general stats."));
+				}
+				break;
+			case ".csproj": // C# Project file - Dependencies and references
+				try {
+					XmlDocument csprojDoc = new();
+					csprojDoc.Load(filePath);
+					int packageRefCount = csprojDoc.SelectNodes("//PackageReference").Count;
+					int refCount        = csprojDoc.SelectNodes("//Reference").Count;
+					specificStats.Add(new StatItem("Package References",
+												   packageRefCount.ToString(),
+												   "Number of NuGet packages."));
+					specificStats.Add(new StatItem("References", refCount.ToString(), "Number of project references."));
+					Log.Information("CSPROJ analysis completed: {PackageRefs} packages, {Refs} references in {FilePath}",
+									packageRefCount,
+									refCount,
+									filePath);
+				} catch (Exception ex) {
+					Log.Error("CSPROJ analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("CSPROJ Analysis",
+												   "N/A",
+												   "Error parsing CSPROJ – fallback to general stats."));
+				}
+				break;
+			case ".html": // HTML file - Tag count, scripts
+				try {
+					XmlDocument htmlDoc = new();
+					htmlDoc.Load(filePath);
+					int tagCount    = htmlDoc.SelectNodes("//*").Count;      // Count all elements
+					int scriptCount = htmlDoc.SelectNodes("//script").Count; // Count script tags
+					specificStats.Add(new StatItem("HTML Tags", tagCount.ToString(),    "Total HTML elements."));
+					specificStats.Add(new StatItem("Scripts",   scriptCount.ToString(), "Number of script tags."));
+					Log.Information("HTML analysis completed: {TagCount} tags, {ScriptCount} scripts in {FilePath}",
+									tagCount,
+									scriptCount,
+									filePath);
+				} catch (Exception ex) {
+					Log.Error("HTML analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("HTML Analysis",
+												   "N/A",
+												   "Error parsing HTML – fallback to general stats."));
+				}
+				break;
+			case ".css": // CSS file - Rule count, selectors
+				try {
+					string[] lines     = File.ReadAllLines(filePath);
+					int      ruleCount = lines.Count(line => line.Trim().Contains("{"));
+					specificStats.Add(new StatItem("CSS Rules", ruleCount.ToString(), "Number of CSS rules."));
+					Log.Information("CSS analysis completed: {RuleCount} rules in {FilePath}", ruleCount, filePath);
+				} catch (Exception ex) {
+					Log.Error("CSS analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("CSS Analysis",
+												   "N/A",
+												   "Error parsing CSS – fallback to general stats."));
+				}
+				break;
+			case ".js": // JavaScript file - Function count
+				try {
+					string[] lines = File.ReadAllLines(filePath);
+					int functionCount = lines.Count(line => line.Trim().StartsWith("function") || line.Contains("=>"));
+					specificStats.Add(new StatItem("Functions",
+												   functionCount.ToString(),
+												   "Number of function declarations."));
+					Log.Information("JS analysis completed: {FunctionCount} functions in {FilePath}",
+									functionCount,
+									filePath);
+				} catch (Exception ex) {
+					Log.Error("JS analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("JS Analysis",
+												   "N/A",
+												   "Error parsing JS – fallback to general stats."));
+				}
+				break;
+			case ".sql": // SQL file - Query count
+				try {
+					string[] lines = File.ReadAllLines(filePath);
+					int queryCount = lines.Count(line => line.Trim().ToUpper().StartsWith("SELECT") ||
+														 line.Trim().ToUpper().StartsWith("UPDATE") ||
+														 line.Trim().ToUpper().StartsWith("INSERT") ||
+														 line.Trim().ToUpper().StartsWith("DELETE"));
+					specificStats.Add(new StatItem("Queries", queryCount.ToString(), "Number of SQL queries."));
+					Log.Information("SQL analysis completed: {QueryCount} queries in {FilePath}", queryCount, filePath);
+				} catch (Exception ex) {
+					Log.Error("SQL analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("SQL Analysis",
+												   "N/A",
+												   "Error parsing SQL – fallback to general stats."));
+				}
+				break;
+			case ".csv": // CSV file - Column and row count
+				try {
+					string[] lines       = File.ReadAllLines(filePath);
+					int      rowCount    = lines.Length;
+					int      columnCount = lines[0].Split(',').Length;
+					specificStats.Add(new StatItem("Rows",    rowCount.ToString(),    "Number of rows."));
+					specificStats.Add(new StatItem("Columns", columnCount.ToString(), "Number of columns."));
+					Log.Information("CSV analysis completed: {RowCount} rows, {ColCount} columns in {FilePath}",
+									rowCount,
+									columnCount,
+									filePath);
+				} catch (Exception ex) {
+					Log.Error("CSV analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("CSV Analysis",
+												   "N/A",
+												   "Error parsing CSV – fallback to general stats."));
+				}
+				break;
+			case ".java": // Java file - Class and method count
+				try {
+					string[] lines = File.ReadAllLines(filePath);
+					int classCount =
+						lines.Count(line => line.Trim().StartsWith("class") || line.Trim().StartsWith("interface"));
+					int methodCount = lines.Count(line => line.Trim().Contains("(") && line.Trim().Contains(")"));
+					specificStats.Add(new StatItem("Classes", classCount.ToString(), "Number of classes/interfaces."));
+					specificStats.Add(new StatItem("Methods",
+												   methodCount.ToString(),
+												   "Number of method declarations."));
+					Log.Information("Java analysis completed: {ClassCount} classes, {MethodCount} methods in {FilePath}",
+									classCount,
+									methodCount,
+									filePath);
+				} catch (Exception ex) {
+					Log.Error("Java analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("Java Analysis",
+												   "N/A",
+												   "Error parsing Java – fallback to general stats."));
+				}
+				break;
+			case ".sh": // Shell script - Command count
+				try {
+					string[] lines = File.ReadAllLines(filePath);
+					int commandCount =
+						lines.Count(line => !line.Trim().StartsWith("#") && !string.IsNullOrWhiteSpace(line));
+					specificStats.Add(new StatItem("Commands",
+												   commandCount.ToString(),
+												   "Number of executable commands."));
+					Log.Information("SH analysis completed: {CommandCount} commands in {FilePath}",
+									commandCount,
+									filePath);
+				} catch (Exception ex) {
+					Log.Error("SH analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("SH Analysis",
+												   "N/A",
+												   "Error parsing SH – fallback to general stats."));
+				}
+				break;
+			case ".py": // Python file - Function and import count
+				try {
+					string[] lines         = File.ReadAllLines(filePath);
+					int      functionCount = lines.Count(line => line.Trim().StartsWith("def "));
+					int importCount =
+						lines.Count(line => line.Trim().StartsWith("import ") || line.Trim().StartsWith("from "));
+					specificStats.Add(new StatItem("Functions",
+												   functionCount.ToString(),
+												   "Number of function definitions."));
+					specificStats.Add(new StatItem("Imports", importCount.ToString(), "Number of import statements."));
+					Log.Information("PY analysis completed: {FunctionCount} functions, {ImportCount} imports in {FilePath}",
+									functionCount,
+									importCount,
+									filePath);
+				} catch (Exception ex) {
+					Log.Error("PY analysis failed for {FilePath}: {Error}", filePath, ex.Message);
+					specificStats.Add(new StatItem("PY Analysis",
+												   "N/A",
+												   "Error parsing PY – fallback to general stats."));
+				}
+				break;
 			default:
 				specificStats.Add(new StatItem("File Type",
 											   extension.ToUpper(),

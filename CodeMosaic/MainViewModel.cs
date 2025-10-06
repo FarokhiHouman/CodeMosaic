@@ -1,11 +1,8 @@
 ﻿using System.ComponentModel;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 using Serilog;
-
-using MessageBox = System.Windows.MessageBox;
 
 
 // For WPF MessageBox
@@ -54,14 +51,6 @@ public class MainViewModel : INotifyPropertyChanged {
 		ExtractMetadataCommand = new RelayCommand(ExecuteExtractMetadata);
 		SettingsCommand        = new RelayCommand(ExecuteSettings);
 		AboutCommand           = new RelayCommand(ExecuteAbout);
-
-		// Placeholder Commands for new features
-		CloudUploadCommand       = new RelayCommand(ExecuteCloudUpload);
-		VersionHistoryCommand    = new RelayCommand(ExecuteVersionHistory);
-		PluginLoadCommand        = new RelayCommand(ExecutePluginLoad);
-		AIAnalysisCommand        = new RelayCommand(ExecuteAIAnalysis);
-		CollaborationSyncCommand = new RelayCommand(ExecuteCollaborationSync);
-		BatchCLICommand          = new RelayCommand(ExecuteBatchCLI);
 		Logger.Information("MainViewModel initialized - Ready for navigation.");
 	}
 
@@ -97,42 +86,8 @@ public class MainViewModel : INotifyPropertyChanged {
 	}
 
 	private void ExecuteAbout(object parameter) {
-		Logger.Information("Showing About dialog.");
-		MessageBox.Show("CodeMosaic v1.0\nA professional tool for C# file operations: combine, split, list, and more.\nBuilt with WPF and MVVM pattern.",
-						"About CodeMosaic",
-						MessageBoxButton.OK,
-						MessageBoxImage.Information);
-	}
-
-	// Placeholder methods for new features (TODO: Implement logic)
-	private void ExecuteCloudUpload(object parameter) {
-		Logger.Information("Cloud Upload executed - TODO: OneDrive/Google integration.");
-		// TODO: Implement cloud upload logic
-	}
-
-	private void ExecuteVersionHistory(object parameter) {
-		Logger.Information("Version History executed - TODO: Git-like tracking.");
-		// TODO: Implement version history
-	}
-
-	private void ExecutePluginLoad(object parameter) {
-		Logger.Information("Plugin Load executed - TODO: DLL loading for custom processors.");
-		// TODO: Implement plugin system
-	}
-
-	private void ExecuteAIAnalysis(object parameter) {
-		Logger.Information("AI Analysis executed - TODO: OpenAI summarize for metadata.");
-		// TODO: Implement AI analysis
-	}
-
-	private void ExecuteCollaborationSync(object parameter) {
-		Logger.Information("Collaboration Sync executed - TODO: SignalR real-time share.");
-		// TODO: Implement collaboration sync
-	}
-
-	private void ExecuteBatchCLI(object parameter) {
-		Logger.Information("Batch CLI executed - TODO: Console mode for automation.");
-		// TODO: Implement CLI mode
+		Logger.Information("Navigating to About view.");
+		CurrentView = new About(); // Changed to UserControl instead of MessageBox
 	}
 
 	protected virtual void OnPropertyChanged(string propertyName) =>
