@@ -9,6 +9,9 @@
 	<Window.DataContext>
 		<local:MainViewModel />
 	</Window.DataContext>
+	<Window.Resources>
+		<!-- Define default styles or bindings if needed -->
+	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
@@ -18,13 +21,13 @@
 		</Grid.RowDefinitions>
 
 		<!-- Ribbon-like TabControl Menu -->
-		<TabControl Grid.Row="0" TabStripPlacement="Top" Background="LightBlue" Margin="0,0,0,10">
+		<TabControl Grid.Row="0" TabStripPlacement="Top" Background="{DynamicResource BackgroundColor}" Margin="0,0,0,10">
 			<!-- Home Tab: Basic operations -->
 			<TabItem Header="Home">
 				<StackPanel Orientation="Horizontal" Margin="10">
 					<!-- File Operations Group -->
 					<StackPanel Orientation="Vertical" Margin="5">
-						<TextBlock Text="File Operations" FontWeight="Bold" Margin="0,0,0,5" />
+						<TextBlock Text="File Operations" FontWeight="Bold" Margin="0,0,0,5" Foreground="{DynamicResource ForegroundColor}" />
 						<Button Name="CombineButton" 
                                 Content="Combine Files" 
                                 Width="120" Height="30"
@@ -38,7 +41,7 @@
 					</StackPanel>
 					<!-- Analysis Group -->
 					<StackPanel Orientation="Vertical" Margin="20,5,0,0">
-						<TextBlock Text="Analysis" FontWeight="Bold" Margin="0,0,0,5" />
+						<TextBlock Text="Analysis" FontWeight="Bold" Margin="0,0,0,5" Foreground="{DynamicResource ForegroundColor}" />
 						<Button Name="ListFilesButton" 
                                 Content="List Files" 
                                 Width="120" Height="30"
@@ -55,36 +58,30 @@
 			<!-- Tools Tab: Advanced features -->
 			<TabItem Header="Tools">
 				<StackPanel Orientation="Vertical" Margin="10">
-					<TextBlock Text="Utilities" FontWeight="Bold" Margin="0,0,0,5" />
+					<TextBlock Text="Utilities" FontWeight="Bold" Margin="0,0,0,5" Foreground="{DynamicResource ForegroundColor}" />
 					<Button Name="SettingsButton" 
                             Content="Settings" 
                             Width="150" Height="30"
                             Command="{Binding SettingsCommand}"
                             Margin="0,0,0,5" />
-					
 				</StackPanel>
 			</TabItem>
 
 			<!-- Help Tab -->
 			<TabItem Header="Help">
 				<StackPanel Orientation="Vertical" Margin="10">
-					<TextBlock Text="Support" FontWeight="Bold" Margin="0,0,0,5" />
+					<TextBlock Text="Support" FontWeight="Bold" Margin="0,0,0,5" Foreground="{DynamicResource ForegroundColor}" />
 					<Button Name="AboutButton" 
                             Content="About" 
                             Width="100" Height="30"
                             Command="{Binding AboutCommand}" />
-					<!-- New button for CLI -->
-					<Button Content="Run Batch CLI" 
-                            Width="100" Height="30"
-                            Command="{Binding BatchCLICommand}"
-                            Margin="0,0,0,5" ToolTip="Console mode for automation" />
-				</StackPanel>
+					</StackPanel>
 			</TabItem>
 		</TabControl>
 
 		<!-- Content Area for Pages - Bound to ViewModel -->
 		<ContentControl Grid.Row="1" Name="MainContent" 
-                        Background="White" 
+                        Background="{DynamicResource BackgroundColor}"
                         Margin="10"
                         Content="{Binding CurrentView}" />
 	</Grid>
